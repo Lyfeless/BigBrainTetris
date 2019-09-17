@@ -10,20 +10,30 @@ from pyglet.window import key
 # Pyglet Elements
 
 window = pyglet.window.Window()
-text = pyglet.text.Label("STAR WARS: EPISODE IX: Suck my phat chode",
+text = pyglet.text.Label("Yo bro thats ficc",
                          font_name = "Comic Sans MS",
                          font_size = 17,
                          color = (255,255,0,255),
                          anchor_x = "center", anchor_y = "center")
 
-#Input
+# "CONSTANTS"
 
-inputs = {key.UP : False,
-          key.LEFT : False,
-          key.RIGHT : False,
-          key.DOWN : False}
+BOARD_WIDTH = 10
+BOARD_HEIGHT = 20
+TILE_SIZE = 30
 
-#Position
+# Board
+
+board = [[0 for x in range(BOARD_WIDTH)] for x in range(BOARD_HEIGHT)]
+
+# Input
+
+inputs = {key.UP    :  False,
+          key.LEFT  :  False,
+          key.RIGHT :  False,
+          key.DOWN  :  False}
+
+# Position
 
 text_x = window.width/2
 text_y = window.height/2
@@ -78,6 +88,8 @@ def on_key_release(symbol, modifiers):
     RUNTIME
 
 """
+
+window.set_size(BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE)
 
 pyglet.clock.schedule_interval(update,1/120.0)
 pyglet.app.run() # Run
