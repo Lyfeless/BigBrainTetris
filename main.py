@@ -1,5 +1,13 @@
 import pyglet
 
+"""
+
+    DEFINITIONS
+
+"""
+
+# Pyglet Elements
+
 window = pyglet.window.Window()
 
 text = pyglet.text.Label("Suck my phat chode",
@@ -9,9 +17,44 @@ text = pyglet.text.Label("Suck my phat chode",
                          x = window.width / 2, y = window.height / 2,
                          anchor_x = "center", anchor_y = "center")
 
+#Input
+
+inputs = {}
+
+
+"""
+
+    FUNCTIONS
+
+"""
+
+
+
+"""
+
+    EVENTS
+
+"""
+
 @window.event
 def on_draw():
     window.clear()
     text.draw();
 
-pyglet.app.run()
+@window.event
+def on_key_press(symbol, modifiers):
+    inputs[symbol] = True
+    print("pressed " + str(symbol))
+    
+@window.event
+def on_key_release(symbol, modifiers):
+    inputs[symbol] = False
+    print("depressed " + str(symbol))
+
+"""
+
+    RUNTIME
+
+"""
+
+pyglet.app.run() # Run
