@@ -25,10 +25,14 @@ BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
 TILE_SIZE = 30
 
+MOVE_SPEED = 4
+
 # Board
 
 board = []
 movingBlocks = []
+
+timer = 0
 
 # Images
 
@@ -65,6 +69,9 @@ def update(dt):
     global text_x
     global text_y
 
+    global board
+    global timer
+
     text.x = text_x
     text.y = text_y
 
@@ -77,8 +84,25 @@ def update(dt):
     if inputs[key.LEFT]:
         text_x -= 1
 
+    timer += 1
+
+    if timer > 20:
+        timer = 0
+        block_x = random.randint(0, len(board[0]) - 1) * TILE_SIZE
+        block_y = len(board) * TILE_SIZE
+        addMoveBlock(block_x, block_y, block_x, block_y - TILE_SIZE, MOVE_SPEED)
+
+        for y in range(len(board)):
+            for x in range(len(board[y])):
+                if board[y][x].visible == True and y > 0 and board[y - 1][x].visible == False:
+                    addMoveBlock(x * TILE_SIZE, y * TILE_SIZE, x * TILE_SIZE, (y - 1) * TILE_SIZE, MOVE_SPEED)
+        
+
     for moveBlock in movingBlocks:
         moveBlock.update()
+
+def addMoveBlock(x, y, target_x, target_y, scale):
+    movingBlocks.append(MoveBlock(x, y, target_x, target_y, scale, blockImg))
 
 """
 
@@ -97,13 +121,16 @@ class MoveBlock:
         self.scale    =  scale
         self.sprite   =  pyglet.sprite.Sprite(image, self.x, self.y, batch = moveBatch)
 
-        board[math.ceil(y / TILE_SIZE)][math.ceil(x / TILE_SIZE)].visible = 0
+
+        tile_x = math.ceil(self.x / TILE_SIZE)
+        tile_y = math.ceil(self.y / TILE_SIZE)
+
+        if (tile_x >= 0 and tile_x < len(board[0])) and (tile_y >= 0 and tile_y < len(board)):
+            board[tile_y][tile_x].visible = 0
 
     def update(self):
         global board
         global movingBlocks
-
-        print(str(self.x) + ", " + str(self.y))
 
         distance_x = (self.target_x - self.x)
         distance_y = (self.target_y - self.y)
@@ -114,16 +141,13 @@ class MoveBlock:
         self.sprite.x = self.x
         self.sprite.y = self.y
 
-        if distance_x < 1 and distance_y < 1:
+        if abs(distance_x) < 1 and abs(distance_y) < 1:
             
-            tile_x = math.ceil(self.x / TILE_SIZE)
-            tile_y = math.ceil(self.y / TILE_SIZE)
+            tile_x = math.floor(self.x / TILE_SIZE)
+            tile_y = math.floor(self.y / TILE_SIZE)
             
             if (tile_x >= 0 and tile_x < len(board[0])) and (tile_y >= 0 and tile_y < len(board)):
                 board[tile_y][tile_x].visible = 1
-
-            print("Tile: " + str(tile_x) + ", " + str(tile_y))
-
                 
             movingBlocks.remove(self)
             
@@ -168,11 +192,11 @@ for y in range(len(board)):
         else:
             board[y][x].visible = False
 
-board[0][0].visible = True
-board[1][0].visible = True
+#board[0][0].visible = True
+#board[1][0].visible = True
 
 
-movingBlocks.append(MoveBlock(0, TILE_SIZE, TILE_SIZE * 5, TILE_SIZE * 7, 12, blockImg))
+#movingBlocks.append(MoveBlock(0, TILE_SIZE, TILE_SIZE * 5, TILE_SIZE * 7, 12, blockImg))
 
 pyglet.clock.schedule_interval(update,1/120.0)
 pyglet.app.run() # Run
