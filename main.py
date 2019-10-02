@@ -143,7 +143,7 @@ class MoveBlock:
 
         if abs(distance_x) < 1 and abs(distance_y) < 1:
             
-            tile_x = math.floor(self.x / TILE_SIZE)
+            tile_x = math.ceil(self.x / TILE_SIZE)
             tile_y = math.floor(self.y / TILE_SIZE)
             
             if (tile_x >= 0 and tile_x < len(board[0])) and (tile_y >= 0 and tile_y < len(board)):
@@ -184,7 +184,6 @@ window.set_size(BOARD_WIDTH * TILE_SIZE, BOARD_HEIGHT * TILE_SIZE)
 
 board  = [[pyglet.sprite.Sprite(blockImg, x * TILE_SIZE, y * TILE_SIZE, batch=blockBatch) for x in range(BOARD_WIDTH)] for y in range(BOARD_HEIGHT)]
 
-
 for y in range(len(board)):
     for x in range(len(board[y])):
         if random.randint(0, 1) == 1:
@@ -196,7 +195,7 @@ for y in range(len(board)):
 #board[1][0].visible = True
 
 
-#movingBlocks.append(MoveBlock(0, TILE_SIZE, TILE_SIZE * 5, TILE_SIZE * 7, 12, blockImg))
+movingBlocks.append(MoveBlock(0, TILE_SIZE, TILE_SIZE * 5, TILE_SIZE * 7, 12, blockImg))
 
 pyglet.clock.schedule_interval(update,1/120.0)
 pyglet.app.run() # Run
